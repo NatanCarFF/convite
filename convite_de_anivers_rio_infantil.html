@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite de Aniversário Infantil</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Fredoka para visual infantil e Inter para leitura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 
+           ===================================================================
+           REQUISITO 4: BLOQUEIO DE SELEÇÃO DE TEXTO PELO MOUSE
+           ===================================================================
+        */
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        /* 
+           ===================================================================
+           REQUISITO 3: IMAGEM DE PLANO DE FUNDO (SUBSTITUA A URL ABAIXO)
+           Para alterar o fundo, troque a URL dentro de url('...') pela foto desejada.
+           ===================================================================
+        */
+        .bg-custom-background {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.55)), 
+                              url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Animações Flutuantes */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 18px rgba(255,255,255,0.7)); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar e utilitários de Modal */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Efeito de confetes caindo no fundo */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-custom-background min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-x-hidden relative">
+
+    <!-- 
+       ===================================================================
+       REQUISITO 5: MÚSICA DE FUNDO (SUBSTITUA O 'src' PELO SEU ÁUDIO MP3)
+       Substitua o arquivo abaixo pelo caminho do seu áudio (ex: 'musica.mp3').
+       ===================================================================
+    -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-times-158.mp3" type="audio/mpeg">
+        Seu navegador não suporta elemento de áudio.
+    </audio>
+
+    <!-- Botão Flutuante de Música (Play / Pause) -->
+    <button id="musicToggleBtn" onclick="toggleAudio()" 
+            title="Tocar / Pausar Música"
+            class="fixed top-4 right-4 z-40 bg-white/90 hover:bg-white text-purple-600 p-3.5 rounded-full shadow-2xl transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center w-12 h-12 border-2 border-purple-300">
+        <i id="musicIcon" class="fas fa-music text-lg"></i>
+    </button>
+
+    <!-- Confetes em JS gerados dinamicamente no container abaixo -->
+    <div id="confettiContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- Card do Convite Principal -->
+    <main class="relative z-10 w-full max-w-lg glass-card rounded-3xl shadow-2xl border-4 border-white/60 p-6 sm:p-8 text-center my-8 animate-float">
+        
+        <!-- Decoração Topo: Nuvens e Balões -->
+        <div class="flex justify-between items-center mb-2 px-2 text-pink-400">
+            <i class="fas fa-balloon text-3xl sm:text-4xl text-pink-400 animate-bounce"></i>
+            <span class="text-xs uppercase tracking-widest bg-pink-100 text-pink-600 px-3 py-1 rounded-full font-bold shadow-sm">
+                Você foi Convidado! 🎉
+            </span>
+            <i class="fas fa-balloon text-3xl sm:text-4xl text-blue-400 animate-bounce" style="animation-delay: 0.3s;"></i>
+        </div>
+
+        <!-- Título / Idade -->
+        <div class="my-4">
+            <h2 class="text-2xl sm:text-3xl text-purple-600 font-bold tracking-wide">Venha Comemorar os</h2>
+            <!-- NOME E IDADE CONFIGURÁVEIS -->
+            <div class="relative inline-block my-2">
+                <h1 class="text-5xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 drop-shadow-sm">
+                    4 Aninhos
+                </h1>
+            </div>
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-amber-500 mt-1 tracking-wider uppercase">
+                do Lucas! 🎈
+            </h3>
+        </div>
+
+        <p class="text-gray-600 text-base sm:text-lg my-4 font-medium px-2">
+            Um dia cheio de brincadeiras, doces e muita diversão nos espera! Não falte!
+        </p>
+
+        <!-- Caixas de Informações do Evento -->
+        <div class="grid grid-cols-2 gap-3 my-6">
+            <!-- Data -->
+            <div class="bg-gradient-to-br from-pink-50 to-pink-100/80 p-3.5 rounded-2xl border border-pink-200 flex flex-col items-center justify-center shadow-sm">
+                <i class="far fa-calendar-alt text-2xl text-pink-500 mb-1"></i>
+                <span class="text-xs text-gray-500 uppercase font-semibold">Data</span>
+                <span class="text-lg font-bold text-gray-800">15 de Outubro</span>
+            </div>
+
+            <!-- Horário -->
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100/80 p-3.5 rounded-2xl border border-purple-200 flex flex-col items-center justify-center shadow-sm">
+                <i class="far fa-clock text-2xl text-purple-500 mb-1"></i>
+                <span class="text-xs text-gray-500 uppercase font-semibold">Horário</span>
+                <span class="text-lg font-bold text-gray-800">16:00 Horas</span>
+            </div>
+        </div>
+
+        <!-- Botões Interativos -->
+        <div class="space-y-3 mt-6">
+            
+            <!-- 
+               REQUISITO 1: BOTÃO PARA ENCAMINHAR AO WHATSAPP
+               Configure abaixo o número e a mensagem padrão.
+            -->
+            <button onclick="confirmarPresencaWhatsApp()" 
+                    class="w-full bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all flex items-center justify-center gap-3 text-lg border-b-4 border-green-700">
+                <i class="fab fa-whatsapp text-2xl"></i>
+                <span>Confirmar Presença</span>
+            </button>
+
+            <!-- 
+               REQUISITO 2: BOTÃO PARA EXIBIR O BALÃO DE MENSAGEM COM O ENDEREÇO
+            -->
+            <button onclick="openAddressModal()" 
+                    class="w-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all flex items-center justify-center gap-3 text-lg border-b-4 border-blue-700">
+                <i class="fas fa-map-marker-alt text-xl"></i>
+                <span>Ver Local do Evento</span>
+            </button>
+        </div>
+
+        <!-- Rodapé / Mensagem carinhosa -->
+        <p class="text-xs text-gray-400 mt-6 italic">
+            Clique nos botões acima para confirmar ou ver a localização no mapa.
+        </p>
+    </main>
+
+    <!-- 
+       MODAL DE ENDEREÇO (Balão de Mensagem)
+    -->
+    <div id="addressModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-4 border-purple-200 transform transition-transform duration-300 scale-95 relative">
+            
+            <!-- Botão Fechar Modal -->
+            <button onclick="closeAddressModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold bg-gray-100">
+                &times;
+            </button>
+
+            <!-- Ícone e Título -->
+            <div class="w-16 h-16 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Local da Festa</h3>
+            
+            <!-- Texto com Endereço -->
+            <div class="bg-blue-50/70 p-4 rounded-2xl border border-blue-100 mb-5">
+                <!-- ENDEREÇO CONFIGURÁVEL -->
+                <p class="text-lg font-semibold text-purple-700 mb-1">Buffet Magia & Alegria</p>
+                <p class="text-gray-600 text-sm">Av. das Flores, 1234 - Bairro Encantado</p>
+                <p class="text-gray-500 text-xs mt-1">(Entrada principal com recepção de balões)</p>
+            </div>
+
+            <!-- Botão de Ação no Modal: Abrir no Google Maps -->
+            <a id="mapsLink" 
+               href="https://maps.google.com/?q=Buffet+Magia+E+Alegria" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-5 rounded-xl shadow-md transition-all active:scale-95 mb-2">
+                <i class="fas fa-directions"></i>
+                <span>Abrir Rota no Google Maps</span>
+            </a>
+
+            <button onclick="closeAddressModal()" class="w-full py-2.5 text-gray-500 font-semibold hover:text-gray-700 text-sm">
+                Voltar ao convite
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ===================================================================
+           CONFIGURAÇÕES DO CONVITE (PODE ALTERAR AQUI):
+           =================================================================== */
+        const NUMERO_WHATSAPP = "5591999999999"; // Digite o telefone com DDD (somente números)
+        const NOME_ANIVERSARIANTE = "Lucas";
+        const MENSAGEM_WHATSAPP = `Olá! Gostaria de confirmar minha presença no aniversário do ${NOME_ANIVERSARIANTE}! 🎉`;
+
+        // Referências aos elementos
+        const audio = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const addressModal = document.getElementById('addressModal');
+
+        /* LÓGICA DE ÁUDIO (PLAY / PAUSE) */
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                musicIcon.className = "fas fa-music text-lg text-gray-500";
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    musicIcon.className = "fas fa-volume-up text-lg text-purple-600 animate-pulse";
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Autoplay bloqueado pelo navegador. O usuário precisa interagir primeiro.", err);
+                });
+            }
+        }
+
+        // Tenta iniciar a música ao primeiro clique na tela (devido à política de autoplay dos navegadores)
+        document.body.addEventListener('click', function startAudioOnFirstInteraction() {
+            if (!isPlaying) {
+                toggleAudio();
+            }
+            document.body.removeEventListener('click', startAudioOnFirstInteraction);
+        }, { once: true });
+
+        /* LÓGICA DO WHATSAPP */
+        function confirmarPresencaWhatsApp() {
+            const urlEncodedMessage = encodeURIComponent(MENSAGEM_WHATSAPP);
+            const whatsappUrl = `https://wa.me/${NUMERO_WHATSAPP}?text=${urlEncodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        /* LÓGICA DO MODAL DE ENDEREÇO */
+        function openAddressModal() {
+            addressModal.classList.remove('hidden');
+            setTimeout(() => {
+                addressModal.firstElementChild.classList.remove('scale-95');
+                addressModal.firstElementChild.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeAddressModal() {
+            addressModal.firstElementChild.classList.remove('scale-100');
+            addressModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                addressModal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Fechar modal clicando fora dele
+        addressModal.addEventListener('click', (e) => {
+            if (e.target === addressModal) {
+                closeAddressModal();
+            }
+        });
+
+        /* GERADOR DE CONFETES EM BACKGROUND */
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#f43f5e', '#a855f7', '#3b82f6', '#10b981', '#f59e0b', '#ec4899'];
+            
+            for (let i = 0; i < 35; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                confetti.style.animationDelay = (Math.random() * 5) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.width = (Math.random() * 8 + 6) + 'px';
+                confetti.style.height = (Math.random() * 8 + 6) + 'px';
+                container.appendChild(confetti);
+            }
+        }
+
+        // Iniciar confetes ao carregar a página
+        window.addEventListener('load', createConfetti);
+    </script>
+</body>
+</html>
